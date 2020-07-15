@@ -21,6 +21,7 @@ type Mediafile struct {
 	audioRate             int
 	maxKeyframe           int
 	minKeyframe           int
+	maxMuxingQueueSize    int
 	keyframeInterval      int
 	audioCodec            string
 	audioBitrate          string
@@ -152,7 +153,9 @@ func (m *Mediafile) SetMinKeyFrame(v int) {
 func (m *Mediafile) SetKeyframeInterval(v int) {
 	m.keyframeInterval = v
 }
-
+func (m *Mediafile) SetMaxMuxingQueueSize(v int) {
+	m.maxMuxingQueueSize = v
+}
 func (m *Mediafile) SetAudioCodec(v string) {
 	m.audioCodec = v
 }
@@ -433,6 +436,9 @@ func (m *Mediafile) MinKeyFrame() int {
 func (m *Mediafile) KeyFrameInterval() int {
 	return m.keyframeInterval
 }
+func (m *Mediafile) MaxMuxingQueueSize() int {
+	return m.maxMuxingQueueSize
+}
 
 func (m *Mediafile) AudioCodec() string {
 	return m.audioCodec
@@ -686,6 +692,7 @@ func (m *Mediafile) ToStrCommand() []string {
 		"MuxDelay",
 		"Threads",
 		"KeyframeInterval",
+		"MaxMuxingQueueSize",
 		"Preset",
 		"PixFmt",
 		"Tune",
@@ -945,6 +952,12 @@ func (m *Mediafile) ObtainDurationInput() []string {
 func (m *Mediafile) ObtainKeyframeInterval() []string {
 	if m.keyframeInterval != 0 {
 		return []string{"-g", fmt.Sprintf("%d", m.keyframeInterval)}
+	}
+	return nil
+}
+func (m *Mediafile) ObtainMaxMuxingQueueSize() []string {
+	if m.maxMuxingQueueSize != 0 {
+		return []string{"-max_muxing_queue_size", fmt.Sprintf("%d", m.maxMuxingQueueSize)}
 	}
 	return nil
 }
